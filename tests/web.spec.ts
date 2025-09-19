@@ -34,7 +34,7 @@ test('entries add flow creates an entry', async ({ page }) => {
   await page.getByTestId('ts-entries-date-confirm').click();
   await page.waitForSelector('[data-testid="ts-entries-time-save"]', { timeout: 20000, state: 'visible' });
   await page.getByTestId('ts-entries-time-save').click();
-
+  await page.waitForSelector('[data-testid^="ts-entries-row-"]', { timeout: 20000, state: 'visible' });
   await expect(page.locator('[data-testid^="ts-entries-row-"]').first()).toBeVisible();
 });
 
