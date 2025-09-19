@@ -122,7 +122,15 @@ export default function DatePicker({ visible, onClose, onSelect, selectedDate, t
           <View style={styles.calendar}>
             {renderCalendar()}
           </View>
-          
+
+                    <TouchableOpacity
+            style={styles.confirmButton}
+            onPress={() => {
+              const today = new Date().toISOString().split('T')[0];
+              onSelect(selectedDate || today);
+            }}
+            testID={testID}
+          >
           <TouchableOpacity style={styles.confirmButton} onPress={onClose} testID={testID}>
             <Text style={styles.confirmButtonText}>Fortsæt</Text>
           </TouchableOpacity>
