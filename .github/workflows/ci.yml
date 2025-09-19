@@ -1,0 +1,20 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    env:
+      EXPO_PUBLIC_E2E: '1'
+      EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+      EXPO_PUBLIC_SUPABASE_BACKUP_BUCKET: ${{ secrets.EXPO_PUBLIC_SUPABASE_BACKUP_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - run: npm run web:build
+      - run: npx playwright install --with-deps
+      - run: npx playwright test

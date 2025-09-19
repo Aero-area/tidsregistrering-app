@@ -1,2 +1,2 @@
-# timestamp-freelance-timer-app--clone-
+# timestamp-freelance-timer-app
 Created by Rork
