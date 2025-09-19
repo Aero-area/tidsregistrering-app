@@ -7,7 +7,7 @@
     "start-web": "bunx rock start -p nu6h1qxgb82xjbxh5rm7p --web --tunnel",
     "start-web-dev": "DEBUG=expo* bunx rock start -p nu6h1qxgb82xjbxh5rm7p --web --tunnel",
     "lint": "expo lint",
-    "web:build": "expo export -p nu6h1qxgb82xjbxh5rm7p",
+    "web:build": "expo export -p web",
     "web:preview": "npx serve dist -l 4173 -s",
     "ci:lh": "lhci autorun"
   },
