@@ -42,6 +42,9 @@ export default function EntriesScreen() {
 
   // Kobl top-ikonknapper
   const handleAddEntry = () => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    setSelectedId(null);
+    setDraftDate(today);
     setShowDatePicker(true);
   };
 
