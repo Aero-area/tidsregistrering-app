@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Timestamp Freelance Timer App (Clone)",
+    "slug": "timestamp-freelance-timer-app-bxh5rm7p",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.rork.timestamp-freelance-timer-app-bxh5rm7p",
+      "entitlements": {
+        "com": {
+          "apple": {
+            "developer": {
+              "networking": {
+                "wifi-info": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "app.rork.timestamp-freelance-timer-app-bxh5rm7p",
+      "permissions": [
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "output": "static",
+      "pwa": true,
+      "apple": {
+        "icon": "./assets/images/icon.png"
+      }
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://rork.com/"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
