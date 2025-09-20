@@ -3,8 +3,113 @@ import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-const E2E = process.env.EXPO_PUBLIC_E2E === '1';
 
+import 'react-native-url-polyfill/auto';
+import 'react-native-url-polyfill/auto';
+import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import { Platform } from 'react-native';
+
+
+const E2E = process.env.EXPO_PUBLIC_E2E === '1';
+type EnvRecord = Record<string, string | undefined>;
+
+const SUPABASE_E2E_DEFAULTS: EnvRecord = {
+  EXPO_PUBLIC_SUPABASE_URL: 'https://clpalmprapjflfabrrde.supabase.co',
+  EXPO_PUBLIC_SUPABASE_ANON_KEY:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNscGFsbXByYXBqZmxmYWJycmRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3OTM2ODcsImV4cCI6MjA3MTM2OTY4N30.f7sf3PWwG2DWEwTHtEFoJsIOTxQbNuZbDDhIRQGNvwM',
+  EXPO_PUBLIC_SUPABASE_BACKUP_BUCKET: 'backups',
+};
+
+let cachedStaticEnv: EnvRecord | undefined;
+
+function readStaticConfigEnv(): EnvRecord {
+  if (cachedStaticEnv !== undefined) {
+    return cachedStaticEnv;
+  }
+
+  cachedStaticEnv = {};
+
+  if (typeof document !== 'undefined') {
+    const script = document.getElementById('__EXPO_STATIC_CONFIG__');
+    const raw = script?.textContent?.trim();
+
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as { expoEnv?: EnvRecord; publicEnv?: EnvRecord };
+        cachedStaticEnv = {
+          ...(parsed?.expoEnv ?? {}),
+          ...(parsed?.publicEnv ?? {}),
+        };
+      } catch (error) {
+        console.warn('Unable to parse Expo static config for env values', error);
+      }
+    }
+  }
+
+  return cachedStaticEnv;
+}
+
+function readPublicEnvFromSources(key: string): string | undefined {
+  if (typeof process !== 'undefined' && process.env && process.env[key] !== undefined) {
+    return process.env[key];
+  }
+
+  if (typeof globalThis !== 'undefined') {
+    const globalCandidate = globalThis as unknown as EnvRecord & {
+      expoEnv?: EnvRecord;
+      __EXPO_ENV__?: EnvRecord | { expoEnv?: EnvRecord };
+      __EXPO_DYNAMIC_CONFIG__?: { expoEnv?: EnvRecord };
+      __EXPO_STATIC_CONFIG__?: { expoEnv?: EnvRecord; publicEnv?: EnvRecord };
+    };
+
+    const candidates: Array<EnvRecord | undefined> = [
+      globalCandidate.expoEnv,
+      typeof globalCandidate.__EXPO_ENV__ === 'object'
+        ? ('expoEnv' in (globalCandidate.__EXPO_ENV__ as Record<string, any>)
+            ? (globalCandidate.__EXPO_ENV__ as { expoEnv?: EnvRecord }).expoEnv
+            : (globalCandidate.__EXPO_ENV__ as EnvRecord))
+        : undefined,
+      globalCandidate.__EXPO_DYNAMIC_CONFIG__?.expoEnv,
+      globalCandidate.__EXPO_STATIC_CONFIG__?.expoEnv,
+      globalCandidate.__EXPO_STATIC_CONFIG__?.publicEnv,
+    ];
+
+    for (const candidate of candidates) {
+      if (candidate && candidate[key] !== undefined) {
+        return candidate[key];
+      }
+    }
+  }
+
+  const staticEnv = readStaticConfigEnv();
+  if (staticEnv && staticEnv[key] !== undefined) {
+    return staticEnv[key];
+  }
+
+  return undefined;
+}
+
+const rawE2E = readPublicEnvFromSources('EXPO_PUBLIC_E2E');
+const E2E = rawE2E === '1';
+
+function readPublicEnv(key: keyof typeof SUPABASE_E2E_DEFAULTS): string | undefined;
+function readPublicEnv(key: string): string | undefined;
+function readPublicEnv(key: string): string | undefined {
+  const value = readPublicEnvFromSources(key);
+  if (value !== undefined) {
+    return value;
+  }
+
+  if (key in SUPABASE_E2E_DEFAULTS && E2E) {
+    return SUPABASE_E2E_DEFAULTS[key as keyof typeof SUPABASE_E2E_DEFAULTS];
+  }
+
+  return undefined;
+}
 let supabase: any;
 export let envOk: boolean;
 
