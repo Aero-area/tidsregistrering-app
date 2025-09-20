@@ -4,16 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
 
-import 'react-native-url-polyfill/auto';
-import 'react-native-url-polyfill/auto';
-import { createClient } from '@supabase/supabase-js';
-import { createClient } from '@supabase/supabase-js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
-import { Platform } from 'react-native';
-
-
 const E2E = process.env.EXPO_PUBLIC_E2E === '1';
 type EnvRecord = Record<string, string | undefined>;
 
@@ -94,7 +84,6 @@ function readPublicEnvFromSources(key: string): string | undefined {
 }
 
 const rawE2E = readPublicEnvFromSources('EXPO_PUBLIC_E2E');
-const E2E = rawE2E === '1';
 
 function readPublicEnv(key: keyof typeof SUPABASE_E2E_DEFAULTS): string | undefined;
 function readPublicEnv(key: string): string | undefined;
@@ -104,7 +93,7 @@ function readPublicEnv(key: string): string | undefined {
     return value;
   }
 
-  if (key in SUPABASE_E2E_DEFAULTS && E2E) {
+  if (key in SUPABASE_E2E_DEFAULTS && rawE2E === '1') {
     return SUPABASE_E2E_DEFAULTS[key as keyof typeof SUPABASE_E2E_DEFAULTS];
   }
 
@@ -113,7 +102,7 @@ function readPublicEnv(key: string): string | undefined {
 let supabase: any;
 export let envOk: boolean;
 
-if (E2E) {
+if (rawE2E === '1') {
   type Row = Record<string, any>;
   const db: Record<string, Row[]> = {
     profiles: [{ id: 'e2e-user', email: 'e2e@example.com' }],
@@ -340,7 +329,7 @@ export { supabase };
 
 // Export resetDB function for E2E tests
 export const resetDB = () => {
-  if (E2E && supabase.resetDB) {
+  if (rawE2E === '1' && supabase.resetDB) {
     supabase.resetDB();
   }
 };
