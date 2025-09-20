@@ -131,7 +131,6 @@ export default function DatePicker({ visible, onClose, onSelect, selectedDate, t
             }}
             testID={testID}
           >
-          <TouchableOpacity style={styles.confirmButton} onPress={onClose} testID={testID}>
             <Text style={styles.confirmButtonText}>Fortsæt</Text>
           </TouchableOpacity>
         </View>
