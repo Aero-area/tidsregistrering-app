@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   page.on('console', msg => console.log('console:', msg.text()));
   
   // Navigate to the page first to ensure the app is loaded
-  await page.goto('/', { waitUntil: 'networkidle' });
+ await page.goto('/', { waitUntil: 'networkidle' });
   
   // Wait for resetDB to be available and call it
   await page.waitForFunction(() => {
@@ -30,10 +30,14 @@ test('entries add flow creates an entry', async ({ page }) => {
   await page.waitForSelector('[data-testid="ts-root"]', { timeout: 20000 });
   await page.getByRole('tab', { name: 'Tidsposter' }).click();
 
+  await page.waitForSelector('[data-testid="ts-entries-add"]', { timeout: 20000, state: 'visible' });
   await page.getByTestId('ts-entries-add').click();
+
+  await page.waitForSelector('[data-testid="ts-entries-date-confirm"]', { timeout: 20000, state: 'visible' });
   await page.getByTestId('ts-entries-date-confirm').click();
   await page.waitForSelector('[data-testid="ts-entries-time-save"]', { timeout: 20000, state: 'visible' });
   await page.getByTestId('ts-entries-time-save').click();
+
   await page.waitForSelector('[data-testid^="ts-entries-row-"]', { timeout: 20000, state: 'visible' });
   await expect(page.locator('[data-testid^="ts-entries-row-"]').first()).toBeVisible();
 });
